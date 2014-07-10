@@ -33,12 +33,16 @@ class HLint
 
         violations = []
         items = result.stdout.split '\n\n'
-        for item in items[...-1]
-          [file, line, col, severity, msg] = item.match(pattern)[1..5]
-          bufferPoint = new Point(parseInt(line) - 1, parseInt(col) - 1)
-          bufferRange = new Range(bufferPoint, bufferPoint)
-          violation = new HLintViolation(severity.toLowerCase(), bufferRange, msg)
-          violations.push(violation)
+        
+        items.push ""
+
+        if items[0].trim() != "No suggestions".trim()
+            for item in items[...-1]
+              [file, line, col, severity, msg] = item.match(pattern)[1..5]
+              bufferPoint = new Point(parseInt(line) - 1, parseInt(col) - 1)
+              bufferRange = new Range(bufferPoint, bufferPoint)
+              violation = new HLintViolation(severity.toLowerCase(), bufferRange, msg)
+              violations.push(violation)
 
         callback(null, violations)
       else
